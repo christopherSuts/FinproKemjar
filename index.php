@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (isset($_SESSION['username'])) {
+if (isset($_SESSION['jwt'])) {
     header("Location: dashboard.php");
     exit;
 }
@@ -14,12 +14,15 @@ if (isset($_SESSION['username'])) {
     <h1>Login</h1>
     <form action="process_login.php" method="POST">
         <label>Username:</label>
-        <input type="text" name="username" required>
-        <br>
+        <input type="text" name="username" required><br><br>
+        
         <label>Password:</label>
-        <input type="password" name="password" required>
-        <br>
+        <input type="password" name="password" required><br><br>
+        
         <button type="submit">Login</button>
     </form>
+
+    <br>
+    <p>Don't have an account? <a href="register.php">Register here</a></p>
 </body>
 </html>

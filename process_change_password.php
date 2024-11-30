@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'db_connection.php'; // Hubungkan ke database
+require 'db_connection.php';
 
 if (!isset($_SESSION['username'])) {
     header("Location: index.php");

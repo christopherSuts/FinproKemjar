@@ -1,0 +1,16 @@
+{
+    "name": "alya/finpro-kemjar",
+    "autoload": {
+        "psr-4": {
+            "Alya\\FinproKemjar\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Group16"
+        }
+    ],
+    "require": {
+        "firebase/php-jwt": "^6.10"
+    }
+}
