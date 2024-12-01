@@ -2,6 +2,7 @@
 session_start();
 require 'db_connection.php';
 require_once 'vendor/autoload.php';
+
 use \Firebase\JWT\JWT;
 
 $key = "123";
@@ -22,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Verifikasi password
         if ($password === $db_password) {
             $_SESSION['username'] = $username;
+
             // Data untuk JWT
             $payload = array(
                 "id" => $user_id,
@@ -32,6 +34,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Encode JWT
             $jwt = JWT::encode($payload, $key, 'HS256');
 
+            // Menyimpan JWT ke cookie (bisa ditambah untuk CSRF)
+            setcookie($username, $jwt,  [
+                'expires' => time() + 31536000,
+                'path' => '/',
+                'secure' => false, 
+                'httponly' => false, 
+            ]);
+
             // Menyimpan JWT ke database
             $update_stmt = $conn->prepare("UPDATE users SET jwt_token = ? WHERE id = ?");
             $update_stmt->bind_param("si", $jwt, $user_id);
@@ -39,27 +49,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Memeriksa role pengguna yang login
             if ($db_role === 'admin') {
-                // Beralih ke halaman khusus admin
-                //$_SESSION['jwt'] = $jwt;
-                $_SESSION['username'] = $username;
                 header("Location: admin_dashboard.php");
-                exit(); 
+                exit();
             } else {
-                // Beralih ke halaman utama
-                //$_SESSION['jwt'] = $jwt;
-                $_SESSION['username'] = $username;
                 header("Location: dashboard.php");
                 exit();
             }
-            
         } else {
-            echo("Password salah");
+            echo "<script>
+                alert('Password salah');
+                window.location.href = 'index.php';
+            </script>";
+            exit();
         }
     } else {
-        echo ("Pengguna tidak ditemukan");
+        echo "<script>
+            alert('Pengguna tidak ditemukan');
+            window.location.href = 'index.php';
+        </script>";
+        exit();
     }
-
     $stmt->close();
 }
 $conn->close();
-?>

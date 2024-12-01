@@ -1,6 +1,25 @@
 <?php
 session_start();
-if (!isset($_SESSION['username'])) {
+require_once 'vendor/autoload.php';
+
+use \Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+
+$key = "123";
+
+if (isset($_COOKIE[$_SESSION['username']])) {
+    $jwt = $_COOKIE[$_SESSION['username']];
+
+    try {
+        // Decoding token
+        $decoded = JWT::decode($jwt, new Key($key, "HS256"));
+    } catch (Exception $e) {
+        // Beralih ke login jika token tidak valid
+        header("Location: index.php");
+        exit;
+    }
+} elseif (!isset($_SESSION['username'])) {
+    // Beralih ke login jika token tidak ada
     header("Location: index.php");
     exit;
 }

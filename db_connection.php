@@ -2,7 +2,7 @@
 $servername = "localhost";
 $username = "root"; // Sesuaikan dengan username MySQL Anda
 $password = ""; // Kosong jika Anda tidak memiliki password untuk MySQL
-$dbname = ""; // Isi sesuai nama database
+$dbname = "account_manager"; // Isi sesuai nama database
 
 // Membuat koneksi
 $conn = new mysqli($servername, $username, $password, $dbname);
