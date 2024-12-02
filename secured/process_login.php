@@ -12,6 +12,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
 
     $stmt = $conn->prepare("SELECT id, username, password, role FROM users WHERE username = ?");
+    if (!$stmt) {
+        die("Kesalahan pada kueri: " . $conn->error); // Debug error
+    }
+
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $stmt->store_result();
