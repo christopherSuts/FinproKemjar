@@ -26,6 +26,10 @@ if (isset($_COOKIE[$_SESSION['username']])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("CSRF token tidak valid. Operasi dihentikan.");
+    }
+    
     $new_password = $_POST['new_password'];
     $username = $_SESSION['username'];
 
@@ -40,6 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $stmt->close();
+
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 $conn->close();
 ?>

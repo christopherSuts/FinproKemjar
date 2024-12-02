@@ -3,7 +3,7 @@
         'name' => 'alya/finpro-kemjar',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'fcb5b0c1522360704b137a015edde222b735e39d',
+        'reference' => 'f5aed99883acc1fc2aa28f87059903625c3eae21',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'alya/finpro-kemjar' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'fcb5b0c1522360704b137a015edde222b735e39d',
+            'reference' => 'f5aed99883acc1fc2aa28f87059903625c3eae21',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
