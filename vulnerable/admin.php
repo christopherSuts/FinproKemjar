@@ -7,19 +7,20 @@ use \Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
 $key = "123";
+$token = $_COOKIE['admin'] ?? '';
 
-if (isset($_COOKIE[$_SESSION['username']])) {
-    $jwt = $_COOKIE[$_SESSION['username']];
-
+if ($token) {
     try {
         // Decode token
-        $decoded = JWT::decode($jwt, new Key($key, "HS256"));
+        $decoded = JWT::decode($token, new Key($key, "HS256"));
+        $decoded_array = (array)$decoded;
+        $username = $decoded_array['username'];
     } catch (Exception $e) {
         // Beralih ke login jika token tidak valid
         header("Location: index.php");
         exit;
     }
-} elseif (!isset($_SESSION['username'])) {
+} else {
     // Beralih ke login jika token tidak ditemukan
     header("Location: index.php");
     exit;
@@ -33,7 +34,7 @@ if (isset($_COOKIE[$_SESSION['username']])) {
 </head>
 
 <body>
-    <h1>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h1>
+    <h1>Welcome, <?php echo htmlspecialchars($username); ?>!</h1>
     <a href="logout.php">Logout</a>
     <?php
     // Query untuk mendapatkan semua data dari tabel users

@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             setcookie($username, $jwt,  [
                 'expires' => time() + 31536000,
                 'path' => '/',
-                'secure' => false, 
+                'secure' => true, 
                 'httponly' => false, 
                 'sameSite' => 'None'
             ]);
