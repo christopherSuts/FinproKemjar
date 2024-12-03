@@ -5,7 +5,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
     $username = $_POST['username'];
     $password = $_POST['password'];
-    $role = $_POST['role'];
 
     // Validasi agar tidak menerima input kosong
     if (empty($email) || empty($username) || empty($password)) {
@@ -23,8 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "Username atau email sudah terdaftar!";
     } else {
         // Menyimpan data pengguna ke database
-        $stmt = $conn->prepare("INSERT INTO users (email, username, password, role) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $email, $username, $password, $role);
+        $stmt = $conn->prepare("INSERT INTO users (email, username, password) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $email, $username, $password);
 
         if ($stmt->execute()) {
             echo "Registrasi berhasil! <a href='index.php'>Login</a>";

@@ -44,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'path' => '/',
                 'secure' => false, 
                 'httponly' => false, 
+                'sameSite' => 'None'
             ]);
 
             // Menyimpan JWT ke database
@@ -53,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Memeriksa role pengguna yang login
             if ($db_role === 'admin') {
-                header("Location: admin_dashboard.php");
+                header("Location: admin.php");
                 exit();
             } else {
                 header("Location: dashboard.php");
