@@ -1,11 +1,10 @@
 <?php
-require 'db_connection.php'; 
+require 'db_connection.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
     $username = $_POST['username'];
     $password = $_POST['password'];
-    $role = $_POST['role'];
 
     // Validasi agar tidak menerima input kosong
     if (empty($email) || empty($username) || empty($password)) {
@@ -14,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Memeriksa apakah email/username sudah terdaftar
-    $stmt = $conn->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
+    $stmt = $conn->prepare("SELECT id FROM user WHERE username = ? OR email = ?");
     $stmt->bind_param("ss", $username, $email);
     $stmt->execute();
     $stmt->store_result();
@@ -22,9 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($stmt->num_rows > 0) {
         echo "Username atau email sudah terdaftar!";
     } else {
+        // Hashing password pengguna
+        $options = ['cost' => 12];
+        $hashed_password = password_hash($password, PASSWORD_BCRYPT, $options);
+
         // Menyimpan data pengguna ke database
-        $stmt = $conn->prepare("INSERT INTO users (email, username, password, role) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $email, $username, $password, $role);
+        $stmt = $conn->prepare("INSERT INTO user (email, username, password) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $email, $username, $hashed_password);
 
         if ($stmt->execute()) {
             echo "Registrasi berhasil! <a href='index.php'>Login</a>";
@@ -36,4 +39,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->close();
 }
 $conn->close();
-?>

@@ -5,14 +5,14 @@ require_once 'vendor/autoload.php';
 use \Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-$key = "123";
+$key = "O3nmMs3K4cfYA3dQBj0FzMFiGVrL9WGj";
 
 if (isset($_COOKIE[$_SESSION['username']])) {
     $jwt = $_COOKIE[$_SESSION['username']];
 
     try {
         // Decoding token
-        $decoded = JWT::decode($jwt, new Key($key, "HS256"));
+        $decoded = JWT::decode($jwt, new Key($key, "HS512"));
     } catch (Exception $e) {
         // Beralih ke login jika token tidak valid
         header("Location: index.php");

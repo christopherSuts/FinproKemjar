@@ -5,13 +5,13 @@ require_once 'vendor/autoload.php';
 
 use \Firebase\JWT\JWT;
 
-$key = "123";
+$key = "O3nmMs3K4cfYA3dQBj0FzMFiGVrL9WGj";
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {  
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $stmt = $conn->prepare("SELECT id, username, password, role FROM users WHERE username = ?");
+    $stmt = $conn->prepare("SELECT id, username, password, role FROM user WHERE username = ?");
     if (!$stmt) {
         die("Kesalahan pada kueri: " . $conn->error); // Debug error
     }
@@ -25,29 +25,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->fetch();
 
         // Verifikasi password
-        if ($password === $db_password) {
+        if (password_verify($password, $db_password)) {
             $_SESSION['username'] = $username;
 
             // Data untuk JWT
             $payload = array(
                 "id" => $user_id,
-                "username" => $db_username,
-                "role" => $db_role
+                "role" => $db_role,
+                "session_id" => bin2hex(random_bytes(16)),
+                "iat" => time(),        
+                "exp" => time() + 3600
             );
 
             // Encode JWT
-            $jwt = JWT::encode($payload, $key, 'HS256');
+            $jwt = JWT::encode($payload, $key, 'HS512');
 
             // Menyimpan JWT ke cookie (bisa ditambah untuk CSRF)
             setcookie($username, $jwt,  [
-                'expires' => time() + 31536000,
+                'expires' => time() + 3600,
                 'path' => '/',
-                'secure' => false, 
-                'httponly' => false, 
+                'secure' => true,
+                'httponly' => true,
+                'samesite' => 'Strict'
             ]);
 
             // Menyimpan JWT ke database
-            $update_stmt = $conn->prepare("UPDATE users SET jwt_token = ? WHERE id = ?");
+            $update_stmt = $conn->prepare("UPDATE user SET jwt_token = ? WHERE id = ?");
             $update_stmt->bind_param("si", $jwt, $user_id);
             $update_stmt->execute();
 
